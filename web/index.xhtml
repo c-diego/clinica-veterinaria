@@ -1,0 +1,113 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Agendamento de Consulta</title>
+    </h:head>
+    <h:body>
+
+        <p:dock position="top">
+            <p:menuitem value="Início" icon="public/home.png" url="/faces/index.xhtml" />
+            <p:menuitem value="CRUD Animais" icon="public/chicken.png" url="/faces/crud_animal.xhtml" />
+            <p:menuitem value="CRUD Veterinários" icon="public/vet.png" url="/faces/crud_veterinario.xhtml" />
+        </p:dock>
+
+        <h:form id="appointmentForm">
+
+            <p:panelGrid columns="2" id="form">
+
+                <f:facet name="header">
+                    Agendar Consulta
+                </f:facet>
+
+                <h:outputLabel for="menuTypeAnimal" value="Tipo Animal:" />
+                <p:selectOneMenu id="menuTypeAnimal" value="#{homeBean.selectedTypeAnimal}" converter="#{typeAnimalConverter}">
+                    <f:selectItem itemLabel="Selecione" itemDisabled="true" />
+                    <f:selectItems value="#{homeBean.typeAnimals}" var="typeAnimal" itemLabel="#{typeAnimal.type}"/>
+                    <p:ajax event="change" update="menuVet"/>
+                </p:selectOneMenu>
+
+                <h:outputLabel for="menuVet" value="Veterinário:" />
+                <p:selectOneMenu id="menuVet" value="#{homeBean.selectedVet}" converter="#{vetConverter}">
+                    <f:selectItem itemLabel="Selecione" itemDisabled="true" />
+                    <f:selectItems value="#{homeBean.vetItens}"/>
+                </p:selectOneMenu>
+
+                <h:outputLabel for="tutor" value="Tutor:" />
+                <p:inputText id="tutor" value="#{homeBean.appointment.owner}" label="Tutor"/>
+
+                <h:outputLabel for="nome_animal" value="Nome do Animal:" />
+                <p:inputText id="nome_animal" value="#{homeBean.appointment.animalName}" label="Nome do Animal"/>
+
+                <h:outputLabel for="motivo" value="Motivo:" />
+                <p:inputText id="motivo" value="#{homeBean.appointment.reason}" label="Motivo"/>
+
+                <p:outputLabel for="phone" value="Telefone: "/>
+                <h:panelGroup layout="block">
+                    <p:inputMask id="phone" value="#{homeBean.appointment.phone}"  mask="+55 (99) 99999-9999"/>
+                </h:panelGroup>
+
+                <h:outputLabel for="date" value="Data/Hora:" />
+                <p:calendar id="date" value="#{homeBean.appointment.date}" pattern="dd/MM/yyyy HH:mm" stepMinute="15"/>
+                <f:facet name="footer">           
+                    <p:commandButton immediate="true" resetValues="true" value="Limpar" update="form" icon="ui-icon-close" />
+                    <p:commandButton value="Agendar" action="#{homeBean.ok}" update=":table" icon="ui-icon-check" />
+                </f:facet>
+            </p:panelGrid>
+
+        </h:form>
+
+        <hr/>
+
+        <p:dataTable  id="table" var="app" value="#{homeBean.appointments}" paginator="true"
+                     rows="10" paginatorPosition="bottom"
+                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink}
+                     {LastPageLink} {RowsPerPageDropdown}">
+
+            <f:facet name="header">
+                Lista de Consultas Agendadas - (#{homeBean.appointments.size()})
+            </f:facet>
+
+            <p:column headerText="Data/Hora">
+                #{app.date}
+            </p:column>
+
+            <p:column headerText="Veterinário">
+                #{app.vet}
+            </p:column>
+
+            <p:column headerText="Tipo Animal">
+                #{app.typeAnimal}
+            </p:column>
+
+            <p:column headerText="Nome do Animal">
+                #{app.animalName}
+            </p:column>
+
+            <p:column headerText="Tutor">
+                #{app.owner}
+            </p:column>
+
+            <p:column headerText="Motivo">
+                #{app.reason}
+            </p:column>
+
+            <p:column headerText="Telefone">
+                #{app.phone}
+            </p:column>
+
+            <p:column headerText="Ações">
+                <h:form>
+                    <p:commandButton update=":appointmentForm:form" action="#{homeBean.update(app)}" value="Editar" icon="ui-icon-pencil" />
+                    <p:commandButton update=":table" action="#{homeBean.delete(app)}" value="Cancelar" icon="ui-icon-cancel" />
+                </h:form>
+            </p:column>
+
+        </p:dataTable>
+
+    </h:body>
+</html>
+

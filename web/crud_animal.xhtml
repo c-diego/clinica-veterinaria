@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>CRDU Animal</title>
+    </h:head>
+    <h:body>
+
+        <p:dock position="top">
+            <p:menuitem value="Início" icon="public/home.png" url="/faces/index.xhtml" />
+            <p:menuitem value="CRUD Animais" icon="public/chicken.png" url="/faces/crud_animal.xhtml" />
+            <p:menuitem value="CRUD Veterinários" icon="public/vet.png" url="/faces/crud_veterinario.xhtml" />
+        </p:dock>
+
+        <p:panelGrid columns="2">
+
+            <f:facet name="header">
+                Cadastrar Tipo de Animal
+            </f:facet>
+
+            <h:outputLabel for="nome" value="Nome:" />
+            <p:inputText id="nome" value="" label="Nome"/>
+
+            <f:facet name="footer">
+                <h:form>
+                    <p:commandButton type="button" value="Limpar" icon="ui-icon-close" />
+                    <p:commandButton type="button" value="Cadastrar" icon="ui-icon-check" />
+                </h:form>
+            </f:facet>
+
+
+        </p:panelGrid>
+
+        <hr></hr>
+
+        <p:dataTable var="tipo" value="#{bean.tipos}" paginator="true"
+                     rows="10" paginatorPosition="bottom"
+                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink}
+                     {LastPageLink} {RowsPerPageDropdown}">
+
+            <f:facet name="header">
+                Lista de Tipos de Animais Cadastrados - (#{bean.tipos.length})
+            </f:facet>
+
+            <p:column headerText="Nome">
+                #{animal.tipo}
+            </p:column>
+
+            <p:column headerText="Editar">
+                <h:form>
+                    <p:commandButton type="button" value="Editar" icon="ui-icon-pencil" />
+                </h:form>
+            </p:column> 
+           
+            <p:column headerText="Excluir">
+                <h:form>
+                    <p:commandButton type="button" value="excluir" icon="ui-icon-trash" />
+                </h:form>
+            </p:column>
+
+        </p:dataTable>
+
+    </h:body>
+</html>
+
